@@ -11,10 +11,10 @@ module Proposal
 
   module InstanceMethods
     def candidate_attributes
-      ActiveSupport::JSON.decode Marshal.load(Base64.decode64(candidate_data))
+      Marshal.load(Base64.decode64(candidate_data))
     end
     def candidate_attributes=(candidate_attributes)
-      self.candidate_data = Base64.encode64(Marshal.dump(candidate_attributes.to_json))
+      self.candidate_data = Base64.encode64(Marshal.dump(candidate_attributes))
     end
   end
 
