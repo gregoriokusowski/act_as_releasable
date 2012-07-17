@@ -67,6 +67,9 @@ module ActAsReleasable
       end
     end
 
+    def has_changes_to_be_approved?
+      releasable_candidate.present? || !releasable_candidate_items.empty?
+    end
   end
 
   def self.included(receiver)

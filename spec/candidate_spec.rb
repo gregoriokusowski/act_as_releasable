@@ -84,4 +84,9 @@ describe "the creation of a release candidate" do
 
   end
 
+  describe "after creating a release candidate" do
+    before { phantoms.tap{|p| p.name = "bla"}.generate_new_candidate }
+    it { phantoms.should have_changes_to_be_approved }
+  end
+
 end
