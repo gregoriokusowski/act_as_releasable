@@ -19,22 +19,24 @@ module ActAsReleasable
 
   module InstanceMethods
     def release_version!
-      # Clean-up of the official record
-      self.releasable_collections.each do |collection|
-        send(collection).destroy_all
+      ActiveRecord::Base.transaction do
+        # Clean-up of the official record
+        self.releasable_collections.each do |collection|
+          send(collection).destroy_all
+        end
+
+        # Updating attributes
+        self.attributes = (releasable_candidate.candidate_attributes || {})
+        releasable_candidate_items.each do |candidate_item|
+          send(candidate_item.collection_name).build candidate_item.candidate_attributes
+        end
+
+        # Destroying prototype data
+        releasable_candidate.destroy if releasable_candidate.present?
+        releasable_candidate_items.destroy_all
+
+        save!
       end
-
-      # Updating attributes
-      self.attributes = (releasable_candidate.candidate_attributes || {})
-      releasable_candidate_items.each do |candidate_item|
-        send(candidate_item.collection_name).build candidate_item.candidate_attributes
-      end
-
-      # Destroying prototype data
-      releasable_candidate.destroy if releasable_candidate.present?
-      releasable_candidate_items.destroy_all
-
-      save!
     end
 
     def release_candidate
@@ -51,19 +53,23 @@ module ActAsReleasable
 
     def generate_new_candidate
       if valid?
-        # Destroying prototype data
-        releasable_candidate.destroy if releasable_candidate.present?
-        releasable_candidate_items.destroy_all
+        ActiveRecord::Base.transaction do
 
-        # Creating new prototype data
-        create_releasable_candidate! :candidate_attributes => attributes
-        self.releasable_collections.each do |collection|
-          send(collection).each do |collection_item|
-            unless collection_item.marked_for_destruction?
-              releasable_candidate_items.create! ({:candidate_attributes => collection_item.attributes, :collection_name => collection})
+          # Destroying prototype data
+          releasable_candidate.destroy if releasable_candidate.present?
+          releasable_candidate_items.destroy_all
+
+          # Creating new prototype data
+          create_releasable_candidate! :candidate_attributes => attributes
+          self.releasable_collections.each do |collection|
+            send(collection).each do |collection_item|
+              unless collection_item.marked_for_destruction?
+                releasable_candidate_items.create! ({:candidate_attributes => collection_item.attributes, :collection_name => collection})
+              end
             end
           end
-        end
+
+        end # transaction
       end
     end
 
