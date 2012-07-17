@@ -4,8 +4,8 @@ require File.expand_path('../lib/act_as_releasable/version', __FILE__)
 Gem::Specification.new do |gem|
   gem.authors       = ["Gregório Kusowski"]
   gem.email         = ["gregorio.kusowski@gmail.com"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
+  gem.description   = %q{Make your models work with a release candidate that must be approved}
+  gem.summary       = %q{wip}
   gem.homepage      = ""
 
   gem.files         = `git ls-files`.split($\)
