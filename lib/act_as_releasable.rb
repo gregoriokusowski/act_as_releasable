@@ -25,7 +25,7 @@ module ActAsReleasable
       end
 
       # Updating attributes
-      self.attributes = releasable_candidate.candidate_attributes
+      self.attributes = (releasable_candidate.candidate_attributes || {})
       releasable_candidate_items.each do |candidate_item|
         send(candidate_item.collection_name).build candidate_item.candidate_attributes
       end
