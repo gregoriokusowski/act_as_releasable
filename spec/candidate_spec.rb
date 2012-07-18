@@ -89,4 +89,15 @@ describe "the creation of a release candidate" do
     it { phantoms.should have_changes_to_be_approved }
   end
 
+  describe "the calling of the release_candidate method" do
+    it "should not clear any collection" do
+      jazz_all_stars.players.build attributes_for(:gasper)
+      jazz_all_stars.generate_new_candidate
+
+      jazz_all_stars.release_candidate
+
+      jazz_all_stars.reload.should have(3).players
+    end
+  end
+
 end

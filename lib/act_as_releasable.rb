@@ -40,13 +40,10 @@ module ActAsReleasable
     end
 
     def release_candidate
-      clone.tap do
-        self.releasable_collections.each do |collection|
-          send(collection).clear
-        end
-        self.attributes = releasable_candidate.try(:candidate_attributes) || {}
+      self.class.new.tap do |clone|
+        clone.attributes = releasable_candidate.try(:candidate_attributes) || {}
         releasable_candidate_items.each do |candidate_item|
-          send(candidate_item.collection_name).build candidate_item.candidate_attributes
+          clone.send(candidate_item.collection_name).build candidate_item.candidate_attributes
         end
       end
     end
