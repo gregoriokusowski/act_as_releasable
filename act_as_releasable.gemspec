@@ -5,8 +5,8 @@ Gem::Specification.new do |gem|
   gem.authors       = ["Gregório Kusowski"]
   gem.email         = ["gregorio.kusowski@gmail.com"]
   gem.description   = %q{Make your models work with a release candidate that must be approved}
-  gem.summary       = %q{wip}
-  gem.homepage      = ""
+  gem.summary       = "act_as_releasable-#{ActAsReleasable::VERSION}"
+  gem.homepage      = "https://github.com/gregoriokusowski/act_as_releasable"
 
   gem.files         = `git ls-files`.split($\)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
